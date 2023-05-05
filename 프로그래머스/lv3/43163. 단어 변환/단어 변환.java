@@ -1,37 +1,45 @@
+import java.util.LinkedList;
+import java.util.Queue;
 class Solution {
-    static boolean[] visited;
-    static int answer = 0;
     
-    public int solution(String begin, String target, String[] words) {
-        visited = new boolean[words.length];
-        
-        dfs(begin, target, words, 0);
-        return answer;
+    class Item{
+        String str;
+        int move;
+        Item(String str, int move){
+            this.str = str;
+            this.move = move;
+        }
     }
     
-    public static void dfs(String begin, String target, String[] words, int cnt) {
-        if (begin.equals(target)) {
-            answer = cnt;
-            return;
+    boolean isDiffer(String start, String dest) {
+        int differCount = 0;
+
+        for (int i = 0; i < start.length(); i++) {
+            if (start.charAt(i) == dest.charAt(i)) continue;
+            differCount++;
         }
+
+        return differCount == 1; 
+    }
+    
+    public int solution(String begin, String target, String[] words) {
+        boolean[] visited = new boolean[words.length];
+        Queue<Item> q = new LinkedList<>();    
+        q.add(new Item(begin, 0));
         
-        for(int i=0; i<words.length; i++) {
-            if(visited[i]) {
-                continue;
-            }
+        while(!q.isEmpty()){
+            Item item = q.poll();
+            if(item.str.equals(target))
+                return item.move;
             
-            int k = 0;   
-            for (int j = 0; j < begin.length(); j++) {
-                if (begin.charAt(j) == words[i].charAt(j)) {
-                    k++;
+            for(int i = 0; i < words.length; i++){
+                if(isDiffer(item.str, words[i]) && !visited[i]){
+                    visited[i] = true;
+                    q.add(new Item(words[i], item.move + 1));
                 }
             }
-            
-            if (k == begin.length() - 1) {
-                visited[i] = true;
-                dfs(words[i], target, words, cnt + 1);
-                visited[i] = false;
-            }
         }
+        
+        return 0;
     }
 }
