@@ -19,6 +19,7 @@ class Solution {
     public void dfs(String start, String route, String[][] tickets, int cnt) {
         if(cnt == tickets.length) {
             allRoute.add(route);
+            // System.out.println(route);
             return;
         }
         
