@@ -1,25 +1,25 @@
-import heapq 
-
 V, E = map(int, input().split())
-visited = [False]*(V+1)
-Elist = [[] for _ in range(V+1)]
-heap = [[0, 1]]
-for _ in range(E):
-    s, e, w = map(int, input().split())
-    Elist[s].append([w, e])
-    Elist[e].append([w, s])
- 
+edges = [list(map(int, input().split())) for _ in range(E)]
+edges.sort(key=lambda x: x[2])
+parent = [i for i in range(V+1)]
+
+def get_parent(x):
+    if parent[x] == x:
+        return x
+    parent[x] = get_parent(parent[x])
+    return parent[x]
+
+def union_parent(a, b):
+    a = get_parent(a)
+    b = get_parent(b)
+    if a < b: 
+        parent[b] = a
+    else:
+        parent[a] = b        
+        
 answer = 0
-cnt = 0
-while heap:
-    if cnt == V:
-        break
-    w, s = heapq.heappop(heap)
-    if not visited[s]:
-        visited[s] = True
-        answer += w
-        cnt += 1
-        for i in Elist[s]:
-            heapq.heappush(heap, i)
- 
+for a, b, cost in edges:
+    if get_parent(a) != get_parent(b):
+        union_parent(a, b)
+        answer += cost
 print(answer)
