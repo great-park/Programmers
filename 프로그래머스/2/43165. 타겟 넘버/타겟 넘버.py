@@ -3,20 +3,21 @@ from collections import deque
 def solution(numbers, target):
     answer = 0
     size = len(numbers)
-    queue = deque()
-    queue.append([numbers[0],1])
-    queue.append([-numbers[0],1])
+    q = deque()
+    q.append([numbers[0], 1])
+    q.append([-numbers[0], 1])
     
-    while queue:
-        x, depth = queue.popleft()
-        depth+=1
+    while q:
+        x, depth = q.popleft()
         
-        if depth <= size:
-            queue.append([x+numbers[depth-1], depth])
-            queue.append([x-numbers[depth-1], depth])
+        if depth < size:
+            q.append([x+numbers[depth], depth+1])
+            q.append([x-numbers[depth], depth+1])
         else:
-            if target == x:
+            if x == target:
                 answer += 1
+    
+    
     return answer
         
     
